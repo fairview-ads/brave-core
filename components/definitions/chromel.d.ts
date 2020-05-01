@@ -65,6 +65,13 @@ declare namespace chrome.settingsPrivate {
 declare namespace chrome.braveRewards {
   const createWallet: () => {}
   const getRewardsParameters: (callback: (properties: RewardsExtension.RewardsParameters) => void) => {}
+  const updateMediaDuration: (windowId: number, mediaType: string, url: string, publisherKey: string, publisherName: string, mediaId: string, mediaKey: string, favIconUrl: string, duration: integer) => {}
+  const getMediaPublisherInfo: (mediaKey: string, callback: (properties: RewardsExtension.PublisherInfo) => void) => {}
+  const getPublisherPanelInfo: (windowId: number, mediaType: string, url: string, channelId: string, publisherKey: string, publisherName: string, favIconUrl: string) => {}
+  const savePublisherVisitChannel: (windowId: number, mediaType: string, url: string, channelId: string, publisherKey: string, publisherName: string, favIconUrl: string) => {}
+  const savePublisherVisitUser: (windowId: number, mediaType: string, url: string, channelId: string, publisherKey: string, publisherName: string, mediaKey: string) => {}
+  const savePublisherVisitVideo: (windowId: number, mediaType: string, url: string, channelId: string, publisherKey: string, publisherName: string, mediaKey: string, favIconUrl: string) => {}
+  const savePublisherVisitCustom: (windowId: number, mediaType: string, url: string, channelId: string, publisherKey: string, publisherName: string, favIconUrl: string) => {}
   const tipSite: (tabId: number, publisherKey: string, monthly: boolean) => {}
   const tipTwitterUser: (tabId: number, mediaMetaData: RewardsTip.MediaMetaData) => {}
   const tipRedditUser: (tabId: number, mediaMetaData: RewardsTip.MediaMetaData) => {}

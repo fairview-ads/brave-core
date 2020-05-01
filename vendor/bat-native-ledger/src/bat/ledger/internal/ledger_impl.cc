@@ -377,6 +377,12 @@ std::string LedgerImpl::URIEncode(const std::string& value) {
   return ledger_client_->URIEncode(value);
 }
 
+void LedgerImpl::GetMediaPublisherInfo(
+      const std::string& media_key,
+      ledger::PublisherInfoCallback callback) {
+  database()->GetMediaPublisherInfo(media_key, callback);
+}
+
 void LedgerImpl::GetActivityInfoList(
     uint32_t start,
     uint32_t limit,
@@ -628,6 +634,120 @@ void LedgerImpl::SaveMediaInfo(
     const std::map<std::string, std::string>& data,
     ledger::PublisherInfoCallback callback) {
   media()->SaveMediaInfo(type, data, callback);
+}
+
+void LedgerImpl::UpdateMediaDuration(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& media_id,
+    const std::string& media_key,
+    const std::string& favicon_url,
+    uint64_t duration) {
+  publisher()->UpdateMediaDuration(
+      window_id,
+      media_type,
+      url,
+      publisher_key,
+      publisher_name,
+      media_id,
+      media_key,
+      favicon_url,
+      duration);
+}
+
+void LedgerImpl::GetPublisherPanelInfo(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& favicon_url) {
+  publisher()->GetPublisherPanelInfo(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      favicon_url);
+}
+
+void LedgerImpl::SavePublisherVisitChannel(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& favicon_url) {
+  publisher()->SavePublisherVisitChannel(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      favicon_url);
+}
+
+void LedgerImpl::SavePublisherVisitUser(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& media_key) {
+  publisher()->SavePublisherVisitUser(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      media_key);
+}
+
+void LedgerImpl::SavePublisherVisitVideo(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& media_key,
+    const std::string& favicon_url) {
+  publisher()->SavePublisherVisitVideo(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      media_key,
+      favicon_url);
+}
+
+void LedgerImpl::SavePublisherVisitCustom(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& favicon_url) {
+  publisher()->SavePublisherVisitCustom(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      favicon_url);
 }
 
 void LedgerImpl::SetInlineTippingPlatformEnabled(

@@ -370,6 +370,295 @@
         "parameters": []
       },
       {
+        "name": "updateMediaDuration",
+        "type": "function",
+        "description": "Update the media duration for a given resource",
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "number"
+          },
+          {
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "publisherKey",
+            "type": "string"
+          },
+          {
+            "name": "publisherName",
+            "type": "string"
+          },
+          {
+            "name": "mediaId",
+            "type": "string"
+          },
+          {
+            "name": "mediaKey",
+            "type": "string"
+          },
+          {
+            "name": "favIconUrl",
+            "type": "string"
+          },
+          {
+            "name": "duration",
+            "type": "integer"
+          }
+        ]
+      },
+      {
+        "name": "getMediaPublisherInfo",
+        "type": "function",
+        "description": "Get the details for a particular media publisher",
+        "parameters": [
+          {
+            "name": "mediaKey",
+            "type": "string"
+          },
+          {
+            "type": "function",
+            "name": "callback",
+            "parameters": [
+              {
+                "name": "result",
+                "type": "integer"
+              },
+              {
+                "name": "properties",
+                "type": "object",
+                "properties": {
+                  "publisherKey": {
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "percentage": {
+                    "optional": true,
+                    "type": "number"
+                  },
+                  "status": {
+                    "optional": true,
+                    "type": "number"
+                  },
+                  "excluded": {
+                    "optional": true,
+                    "type": "number"
+                  },
+                  "url": {
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "name": {
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "provider": {
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "favIcon": {
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "id": {
+                    "optional": true,
+                    "type": "string"
+                  },
+                  "weight": {
+                    "optional": true,
+                    "type": "number"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "getPublisherPanelInfo",
+        "type": "function",
+        "description": "Get the panel info for a particular publisher",
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "number"
+          },
+          {
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "channelId",
+            "type": "string"
+          },
+          {
+            "name": "publisherKey",
+            "type": "string"
+          },
+          {
+            "name": "publisherName",
+            "type": "string"
+          },
+          {
+            "name": "favIconUrl",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "savePublisherVisitChannel",
+        "type": "function",
+        "description": "Save the publisher visit details when visiting a site",
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "number"
+          },
+          {
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "channelId",
+            "type": "string"
+          },
+          {
+            "name": "publisherKey",
+            "type": "string"
+          },
+          {
+            "name": "publisherName",
+            "type": "string"
+          },
+          {
+            "name": "favIconUrl",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "savePublisherVisitUser",
+        "type": "function",
+        "description": "Save the publisher visit details when visiting a site",
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "number"
+          },
+          {
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "channelId",
+            "type": "string"
+          },
+          {
+            "name": "publisherKey",
+            "type": "string"
+          },
+          {
+            "name": "publisherName",
+            "type": "string"
+          },
+          {
+            "name": "mediaKey",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "savePublisherVisitVideo",
+        "type": "function",
+        "description": "Save the publisher visit details when visiting a video",
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "number"
+          },
+          {
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "channelId",
+            "type": "string"
+          },
+          {
+            "name": "publisherKey",
+            "type": "string"
+          },
+          {
+            "name": "publisherName",
+            "type": "string"
+          },
+          {
+            "name": "mediaKey",
+            "type": "string"
+          },
+          {
+            "name": "favIconUrl",
+            "type": "string"
+          }
+        ]
+      },
+      {
+        "name": "savePublisherVisitCustom",
+        "type": "function",
+        "description": "Save the publisher visit details when visiting a site",
+        "parameters": [
+          {
+            "name": "windowId",
+            "type": "number"
+          },
+          {
+            "name": "mediaType",
+            "type": "string"
+          },
+          {
+            "name": "url",
+            "type": "string"
+          },
+          {
+            "name": "channelId",
+            "type": "string"
+          },
+          {
+            "name": "publisherKey",
+            "type": "string"
+          },
+          {
+            "name": "publisherName",
+            "type": "string"
+          },
+          {
+            "name": "favIconUrl",
+            "type": "string"
+          }
+        ]
+      },
+      {
         "name": "tipSite",
         "type": "function",
         "description": "Allow the user to perform a tip to a tab's site",

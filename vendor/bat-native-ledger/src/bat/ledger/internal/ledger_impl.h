@@ -139,6 +139,10 @@ class LedgerImpl : public ledger::Ledger {
 
   std::string URIEncode(const std::string& value) override;
 
+  void GetMediaPublisherInfo(
+      const std::string& media_key,
+      ledger::PublisherInfoCallback callback) override;
+
   void GetActivityInfoList(
       uint32_t start,
       uint32_t limit,
@@ -257,6 +261,63 @@ class LedgerImpl : public ledger::Ledger {
       const std::string& type,
       const std::map<std::string, std::string>& data,
       ledger::PublisherInfoCallback callback) override;
+
+  void UpdateMediaDuration(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_id,
+      const std::string& media_key,
+      const std::string& favicon_url,
+      uint64_t duration) override;
+
+  void GetPublisherPanelInfo(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url) override;
+
+  void SavePublisherVisitChannel(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url) override;
+
+  void SavePublisherVisitUser(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key) override;
+
+  void SavePublisherVisitVideo(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key,
+      const std::string& favicon_url) override;
+
+  void SavePublisherVisitCustom(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url) override;
 
   void SetInlineTippingPlatformEnabled(
       const ledger::InlineTipsPlatforms platform,

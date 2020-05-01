@@ -51,6 +51,9 @@ using GetMonthlyReportCallback =
 using GetAllMonthlyReportIdsCallback =
     std::function<void(const std::vector<std::string>&)>;
 
+using GetMediaPublisherInfoCallback =
+    std::function<void(const ledger::Result, ledger::PublisherInfoPtr)>;
+
 class LEDGER_EXPORT Ledger {
  public:
   static bool IsMediaLink(const std::string& url,
@@ -249,6 +252,67 @@ class LEDGER_EXPORT Ledger {
       const std::string& type,
       const std::map<std::string, std::string>& data,
       PublisherInfoCallback callback) = 0;
+
+  virtual void UpdateMediaDuration(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_id,
+      const std::string& media_key,
+      const std::string& favicon_url,
+      uint64_t duration) = 0;
+
+  virtual void GetMediaPublisherInfo(
+      const std::string& media_key,
+      GetMediaPublisherInfoCallback callback) = 0;
+
+  virtual void GetPublisherPanelInfo(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key) = 0;
+
+  virtual void SavePublisherVisitChannel(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url) = 0;
+
+  virtual void SavePublisherVisitUser(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key) = 0;
+
+  virtual void SavePublisherVisitVideo(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key,
+      const std::string& favicon_url) = 0;
+
+  virtual void SavePublisherVisitCustom(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url) = 0;
 
   virtual void SetInlineTippingPlatformEnabled(
       const InlineTipsPlatforms platform,

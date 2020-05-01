@@ -29,7 +29,8 @@ Publisher::Publisher(bat_ledger::LedgerImpl* ledger):
     prefix_list_updater_(
         std::make_unique<PublisherPrefixListUpdater>(ledger)),
     server_publisher_fetcher_(
-        std::make_unique<ServerPublisherFetcher>(ledger)) {
+        std::make_unique<ServerPublisherFetcher>(ledger)),
+    publisher_youtube_(new braveledger_publisher::YouTube(ledger)) {
 }
 
 Publisher::~Publisher() = default;
@@ -793,6 +794,122 @@ void Publisher::OnServerPublisherInfoLoaded(
   }
 
   callback(std::move(server_info));
+}
+
+void Publisher::UpdateMediaDuration(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& media_id,
+    const std::string& media_key,
+    const std::string& favicon_url,
+    uint64_t duration) {
+  if (media_type == "youtube") {
+    publisher_youtube_->UpdateMediaDuration(
+      window_id,
+      media_type,
+      url,
+      publisher_key,
+      publisher_name,
+      media_id,
+      media_key,
+      favicon_url,
+      duration);
+  }
+}
+
+void Publisher::GetPublisherPanelInfo(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& favicon_url) {
+  publisher_youtube_->GetPublisherPanelInfo(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      favicon_url);
+}
+
+void Publisher::SavePublisherVisitChannel(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& favicon_url) {
+  publisher_youtube_->SavePublisherVisitChannel(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      favicon_url);
+}
+
+void Publisher::SavePublisherVisitUser(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& media_key) {
+  publisher_youtube_->SavePublisherVisitUser(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      media_key);
+}
+
+void Publisher::SavePublisherVisitVideo(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& media_key,
+    const std::string& favicon_url) {
+  publisher_youtube_->SavePublisherVisitVideo(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      media_key,
+      favicon_url);
+}
+
+void Publisher::SavePublisherVisitCustom(
+    const uint64_t window_id,
+    const std::string& media_type,
+    const std::string& url,
+    const std::string& channel_id,
+    const std::string& publisher_key,
+    const std::string& publisher_name,
+    const std::string& favicon_url) {
+  publisher_youtube_->SavePublisherVisitCustom(
+      window_id,
+      media_type,
+      url,
+      channel_id,
+      publisher_key,
+      publisher_name,
+      favicon_url);
 }
 
 }  // namespace braveledger_publisher

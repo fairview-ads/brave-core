@@ -12,6 +12,7 @@
 #include <vector>
 
 #include "base/gtest_prod_util.h"
+#include "bat/ledger/internal/publisher/publisher_youtube.h"
 #include "bat/ledger/ledger.h"
 
 namespace bat_ledger {
@@ -96,6 +97,63 @@ class Publisher {
   void GetServerPublisherInfo(
       const std::string& publisher_key,
       ledger::GetServerPublisherInfoCallback callback);
+
+  void UpdateMediaDuration(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_id,
+      const std::string& media_key,
+      const std::string& favicon_url,
+      uint64_t duration);
+
+  void GetPublisherPanelInfo(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url);
+
+  void SavePublisherVisitChannel(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url);
+
+  void SavePublisherVisitUser(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key);
+
+  void SavePublisherVisitVideo(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& media_key,
+      const std::string& favicon_url);
+
+  void SavePublisherVisitCustom(
+      const uint64_t window_id,
+      const std::string& media_type,
+      const std::string& url,
+      const std::string& channel_id,
+      const std::string& publisher_key,
+      const std::string& publisher_name,
+      const std::string& favicon_url);
 
  private:
   void onPublisherActivitySave(
@@ -182,6 +240,7 @@ class Publisher {
   bat_ledger::LedgerImpl* ledger_;  // NOT OWNED
   std::unique_ptr<PublisherPrefixListUpdater> prefix_list_updater_;
   std::unique_ptr<ServerPublisherFetcher> server_publisher_fetcher_;
+  std::unique_ptr<braveledger_publisher::YouTube> publisher_youtube_;
 
   // For testing purposes
   friend class PublisherTest;
