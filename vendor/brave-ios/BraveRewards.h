@@ -25,3 +25,5 @@ FOUNDATION_EXPORT const unsigned char BraveRewardsVersionString[];
 // Components
 #import <BraveRewards/Bookmarks.h>
 #import <BraveRewards/BraveCoreShared.h>
+#import <BraveRewards/LocalDeviceInfo.h>
+#import <BraveRewards/Passphrase.h>
