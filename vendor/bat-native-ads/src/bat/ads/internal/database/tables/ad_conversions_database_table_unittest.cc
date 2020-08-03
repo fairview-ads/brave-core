@@ -316,7 +316,7 @@ TEST_F(BatAdsAdConversionsDatabaseTableTest,
 
   const URLEndpoints endpoints = {
     {
-      "/v3/catalog", {
+      "/v4/catalog", {
         {
           net::HTTP_OK, "/catalog.json"
         }
