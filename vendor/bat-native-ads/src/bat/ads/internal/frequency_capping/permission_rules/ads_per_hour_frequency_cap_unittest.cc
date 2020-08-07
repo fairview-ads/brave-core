@@ -137,7 +137,7 @@ TEST_F(BatAdsAdsPerHourFrequencyCapTest,
       .WillByDefault(Return(true));
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour - 1, 1);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour - 1, 1);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();
@@ -153,7 +153,7 @@ TEST_F(BatAdsAdsPerHourFrequencyCapTest,
       .WillByDefault(Return(2));
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour - 1, 1);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour - 1, 1);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();
@@ -169,7 +169,7 @@ TEST_F(BatAdsAdsPerHourFrequencyCapTest,
       .WillByDefault(Return(2));
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour, 2);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour, 2);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();
@@ -185,7 +185,7 @@ TEST_F(BatAdsAdsPerHourFrequencyCapTest,
       .WillByDefault(Return(2));
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      10 * base::Time::kSecondsPerMinute, 2);
+      ConfirmationType::kViewed, 10 * base::Time::kSecondsPerMinute, 2);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();

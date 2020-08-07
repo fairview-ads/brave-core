@@ -47,6 +47,7 @@ void GeneratePastCampaignHistoryFromNow(
 void GeneratePastAdsHistoryFromNow(
     const std::unique_ptr<AdsImpl>& ads,
     const std::string& creative_instance_id,
+    const ConfirmationType& confirmation_type,
     const uint64_t time_offset_in_seconds,
     const int count) {
   uint64_t now_in_seconds =
@@ -55,7 +56,7 @@ void GeneratePastAdsHistoryFromNow(
   AdHistory history;
   history.uuid = base::GenerateGUID();
   history.ad_content.creative_instance_id = creative_instance_id;
-  history.ad_content.ad_action = ConfirmationType::kViewed;
+  history.ad_content.ad_action = confirmation_type;
 
   for (int i = 0; i < count; i++) {
     now_in_seconds -= time_offset_in_seconds;

@@ -3,9 +3,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this file,
  * You can obtain one at http://mozilla.org/MPL/2.0/. */
 
-#include "bat/ads/internal/frequency_capping/permission_rules/minimum_wait_time_frequency_cap.h"
+#include "bat/ads/internal/frequency_capping/exclusion_rules/landed_frequency_cap.h"
 
 #include <memory>
+#include <vector>
 
 #include "base/files/file_path.h"
 #include "base/files/file_util.h"
@@ -31,13 +32,19 @@ namespace ads {
 
 namespace {
 
-const char kCreativeInstanceId[] = "9aea9a47-c6a0-4718-a0fa-706338bb2156";
+const std::vector<std::string> kCampaignIds = {
+  "60267cee-d5bb-4a0d-baaf-91cd7f18e07e",
+  "90762cee-d5bb-4a0d-baaf-61cd7f18e07e"
+};
+
+const uint64_t kSecondsPerDay = base::Time::kSecondsPerHour *
+    base::Time::kHoursPerDay;
 
 }  // namespace
 
-class BatAdsMinimumWaitTimeFrequencyCapTest : public ::testing::Test {
+class BatAdsLandedFrequencyCapTest : public ::testing::Test {
  protected:
-  BatAdsMinimumWaitTimeFrequencyCapTest()
+  BatAdsLandedFrequencyCapTest()
       : task_environment_(base::test::TaskEnvironment::TimeSource::MOCK_TIME),
         ads_client_mock_(std::make_unique<NiceMock<AdsClientMock>>()),
         ads_(std::make_unique<AdsImpl>(ads_client_mock_.get())),
@@ -45,8 +52,7 @@ class BatAdsMinimumWaitTimeFrequencyCapTest : public ::testing::Test {
             NiceMock<brave_l10n::LocaleHelperMock>>()),
         platform_helper_mock_(std::make_unique<
             NiceMock<PlatformHelperMock>>()),
-        frequency_cap_(std::make_unique<
-            MinimumWaitTimeFrequencyCap>(ads_.get())) {
+        frequency_cap_(std::make_unique<LandedFrequencyCap>(ads_.get())) {
     // You can do set-up work for each test here
 
     brave_l10n::LocaleHelper::GetInstance()->set_for_testing(
@@ -55,7 +61,7 @@ class BatAdsMinimumWaitTimeFrequencyCapTest : public ::testing::Test {
     PlatformHelper::GetInstance()->set_for_testing(platform_helper_mock_.get());
   }
 
-  ~BatAdsMinimumWaitTimeFrequencyCapTest() override {
+  ~BatAdsLandedFrequencyCapTest() override {
     // You can do clean-up work that doesn't throw exceptions here
   }
 
@@ -111,53 +117,115 @@ class BatAdsMinimumWaitTimeFrequencyCapTest : public ::testing::Test {
   std::unique_ptr<AdsImpl> ads_;
   std::unique_ptr<brave_l10n::LocaleHelperMock> locale_helper_mock_;
   std::unique_ptr<PlatformHelperMock> platform_helper_mock_;
-  std::unique_ptr<MinimumWaitTimeFrequencyCap> frequency_cap_;
+  std::unique_ptr<LandedFrequencyCap> frequency_cap_;
   std::unique_ptr<Database> database_;
 };
 
-TEST_F(BatAdsMinimumWaitTimeFrequencyCapTest,
+TEST_F(BatAdsLandedFrequencyCapTest,
     AllowAdIfThereIsNoAdsHistory) {
   // Arrange
-  ON_CALL(*ads_client_mock_, GetAdsPerHour())
-      .WillByDefault(Return(2));
+  CreativeAdInfo ad;
+  ad.campaign_id = kCampaignIds.at(0);
 
   // Act
-  const bool is_allowed = frequency_cap_->IsAllowed();
+  const bool should_exclude = frequency_cap_->ShouldExclude(ad);
 
   // Assert
-  EXPECT_TRUE(is_allowed);
+  EXPECT_FALSE(should_exclude);
 }
 
-TEST_F(BatAdsMinimumWaitTimeFrequencyCapTest,
-    AllowAdIfDoesNotExceedCap) {
+TEST_F(BatAdsLandedFrequencyCapTest,
+    AdAllowedForAdsWithDifferentCampaignId) {
   // Arrange
-  ON_CALL(*ads_client_mock_, GetAdsPerHour())
-      .WillByDefault(Return(2));
+  CreativeAdInfo ad;
+  ad.campaign_id = kCampaignIds.at(0);
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, 0, 1);
 
-  GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      ConfirmationType::kViewed, 45 * base::Time::kSecondsPerMinute, 1);
+  GeneratePastAdsHistoryFromNow(ads_, kCampaignIds.at(1),
+      ConfirmationType::kLanded, 0, 1);
 
   // Act
-  const bool is_allowed = frequency_cap_->IsAllowed();
+  const bool should_exclude = frequency_cap_->ShouldExclude(ad);
 
   // Assert
-  EXPECT_TRUE(is_allowed);
+  EXPECT_FALSE(should_exclude);
 }
 
-TEST_F(BatAdsMinimumWaitTimeFrequencyCapTest,
-    DoNotAllowAdIfExceedsCap) {
+TEST_F(BatAdsLandedFrequencyCapTest,
+    AdAllowedForAdWithDifferentCampaignIdWithin48Hours) {
   // Arrange
-  ON_CALL(*ads_client_mock_, GetAdsPerHour())
-      .WillByDefault(Return(2));
+  CreativeAdInfo ad;
+  ad.campaign_id = kCampaignIds.at(0);
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, 0, 1);
 
-  GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      ConfirmationType::kViewed, 15 * base::Time::kSecondsPerMinute, 1);
+  const uint64_t time_offset = (2 * kSecondsPerDay) - 1;
+  GeneratePastAdsHistoryFromNow(ads_, kCampaignIds.at(1),
+      ConfirmationType::kLanded, time_offset, 1);
 
   // Act
-  const bool is_allowed = frequency_cap_->IsAllowed();
+  const bool should_exclude = frequency_cap_->ShouldExclude(ad);
 
   // Assert
-  EXPECT_FALSE(is_allowed);
+  EXPECT_FALSE(should_exclude);
+}
+
+TEST_F(BatAdsLandedFrequencyCapTest,
+    AdNotAllowedForAdWithSameCampaignIdWithin48Hours) {
+  // Arrange
+  CreativeAdInfo ad;
+  ad.campaign_id = kCampaignIds.at(0);
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, 0, 1);
+
+  const uint64_t time_offset = (2 * kSecondsPerDay) - 1;
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, time_offset, 1);
+
+  // Act
+  const bool should_exclude = frequency_cap_->ShouldExclude(ad);
+
+  // Assert
+  EXPECT_TRUE(should_exclude);
+}
+
+TEST_F(BatAdsLandedFrequencyCapTest,
+    AdAllowedForAdWithSameCampaignIdAfter48Hours) {
+  // Arrange
+  CreativeAdInfo ad;
+  ad.campaign_id = kCampaignIds.at(0);
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, 0, 1);
+
+  const uint64_t time_offset = 2 * kSecondsPerDay;
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, time_offset, 1);
+
+  // Act
+  const bool should_exclude = frequency_cap_->ShouldExclude(ad);
+
+  // Assert
+  EXPECT_FALSE(should_exclude);
+}
+
+TEST_F(BatAdsLandedFrequencyCapTest,
+    AdAllowedForAdWithDifferentCampaignIdAfter48Hours) {
+  // Arrange
+  CreativeAdInfo ad;
+  ad.campaign_id = kCampaignIds.at(0);
+  GeneratePastAdsHistoryFromNow(ads_, ad.campaign_id,
+      ConfirmationType::kLanded, 0, 1);
+
+  const uint64_t time_offset = 2 * kSecondsPerDay;
+  GeneratePastAdsHistoryFromNow(ads_, kCampaignIds.at(1),
+      ConfirmationType::kLanded, time_offset, 1);
+
+  // Act
+  const bool should_exclude = frequency_cap_->ShouldExclude(ad);
+
+  // Assert
+  EXPECT_FALSE(should_exclude);
 }
 
 }  // namespace ads

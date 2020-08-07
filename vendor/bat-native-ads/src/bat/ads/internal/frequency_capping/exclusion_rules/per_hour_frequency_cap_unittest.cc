@@ -134,7 +134,7 @@ TEST_F(BatAdsPerHourFrequencyCapTest,
   ad.creative_instance_id = kCreativeInstanceId;
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour, 1);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour, 1);
 
   // Act
   const bool should_exclude = frequency_cap_->ShouldExclude(ad);
@@ -150,7 +150,7 @@ TEST_F(BatAdsPerHourFrequencyCapTest,
   ad.creative_instance_id = kCreativeInstanceId;
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour - 1, 1);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour - 1, 1);
 
   // Act
   const bool should_exclude = frequency_cap_->ShouldExclude(ad);
@@ -165,7 +165,8 @@ TEST_F(BatAdsPerHourFrequencyCapTest,
   CreativeAdInfo ad;
   ad.creative_instance_id = kCreativeInstanceId;
 
-  GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId, 0, 1);
+  GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
+      ConfirmationType::kViewed, 0, 1);
 
   // Act
   const bool should_exclude = frequency_cap_->ShouldExclude(ad);

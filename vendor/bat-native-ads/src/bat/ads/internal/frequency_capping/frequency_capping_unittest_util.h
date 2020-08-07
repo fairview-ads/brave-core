@@ -11,6 +11,8 @@
 #include <memory>
 #include <string>
 
+#include "bat/ads/confirmation_type.h"
+
 namespace ads {
 
 class AdsImpl;
@@ -30,6 +32,7 @@ void GeneratePastCampaignHistoryFromNow(
 void GeneratePastAdsHistoryFromNow(
     const std::unique_ptr<AdsImpl>& ads,
     const std::string& creative_instance_id,
+    const ConfirmationType& confirmation_type,
     const uint64_t time_offset_in_seconds,
     const int count);
 

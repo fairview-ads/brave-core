@@ -137,7 +137,7 @@ TEST_F(BatAdsAdsPerDayFrequencyCapTest,
       .WillByDefault(Return(2));
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour, 1);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour, 1);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();
@@ -152,7 +152,8 @@ TEST_F(BatAdsAdsPerDayFrequencyCapTest,
   ON_CALL(*ads_client_mock_, GetAdsPerDay())
       .WillByDefault(Return(2));
 
-  GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId, kSecondsPerDay, 2);
+  GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
+      ConfirmationType::kViewed, kSecondsPerDay, 2);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();
@@ -168,7 +169,7 @@ TEST_F(BatAdsAdsPerDayFrequencyCapTest,
       .WillByDefault(Return(2));
 
   GeneratePastAdsHistoryFromNow(ads_, kCreativeInstanceId,
-      base::Time::kSecondsPerHour, 2);
+      ConfirmationType::kViewed, base::Time::kSecondsPerHour, 2);
 
   // Act
   const bool is_allowed = frequency_cap_->IsAllowed();
